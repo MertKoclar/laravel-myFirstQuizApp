@@ -1,17 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\Admin\QuizController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,12 +17,12 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::group(['middleware' => ['auth','isAdmin'],
-              'prefix'=>'admin'], function () {
+Route::group(['middleware' => ['auth','isAdmin'],'prefix'=>'my'], function () {
     Route::get('', function(){
-        return "admin sayfa";
-    });
+        return view('admin.home');
+    })->name('my');
     Route::get('deneme', function () {
         return "olmuş";
     });
+    Route::resource('quizzes', QuizController::class);
 });
