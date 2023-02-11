@@ -13,7 +13,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Anasayfa') }}
                     </x-jet-nav-link>
                 </div>
             </div>
@@ -74,8 +74,14 @@
                     <x-jet-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                    <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition" style="padding-right:5px;">
+                                    <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="" />
+                                    <div class="rounded-md" style="height: 32px;margin-left:3px;">
+                                        <a style="line-height:32px;">{{ Auth::user()->name }}</a>
+                                        @if(auth()->user()->type == 'admin') <br>
+                                        <i class="text-muted" style="font-size:10px;margin:0;margin-left:-35px;margin-top:-15px;position:absolute;">Admin</i>
+                                        @endif
+                                    </div>
                                 </button>
                             @else
                                 <span class="inline-flex rounded-md">
@@ -91,13 +97,26 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            @if(auth()->user()->type == 'admin')
+                            <div class="block px-4 py-2 text-xs text-gray-400">
+                                {{ __('Admin işlemleri') }}
+                            </div>
+
+                            <x-jet-dropdown-link href="{{ route('my') }}">
+                                {{ __('Panel') }}
+                            </x-jet-dropdown-link>
+
+                            <x-jet-dropdown-link href="{{ route('quizzes.index') }}">
+                                {{ __('Quizler') }}
+                            </x-jet-dropdown-link>
+                            @endif
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __('Hesap yönetim') }}
                             </div>
 
                             <x-jet-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
+                                {{ __('Profil') }}
                             </x-jet-dropdown-link>
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -114,7 +133,7 @@
 
                                 <x-jet-dropdown-link href="{{ route('logout') }}"
                                          @click.prevent="$root.submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('Çıkış yap') }}
                                 </x-jet-dropdown-link>
                             </form>
                         </x-slot>

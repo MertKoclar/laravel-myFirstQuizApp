@@ -1,6 +1,15 @@
 @extends('admin.layouts.app')
 @section('title')Admin - Quizler @endsection
 @section('content')
+@if(session('success'))
+<div class="container-fluid pt-4 px-4">
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="fa fa-check"></i>
+        {{session('success')}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+</div>
+@endif
 <div class="container-fluid pt-4 px-4">
     <div class="bg-secondary text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -25,8 +34,9 @@
                             <td>{{$quiz->finished_at}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-sm btn-outline-warning" href=""><i class="fa fa-pen"></i></a>
-                                    <a class="btn btn-sm btn-outline-danger " href=""><i class="fa fa-times"></i></a>
+                                    <a class="btn btn-sm btn-outline-success" href="{{route('questions.index', $quiz->id)}}"><i class="fa fa-question"></i></a>
+                                    <a class="btn btn-sm btn-outline-warning" href="{{route('quizzes.edit', $quiz->id)}}"><i class="fa fa-pen"></i></a>
+                                    <a class="btn btn-sm btn-outline-danger " href="{{route('quizzes.destroy', $quiz->id)}}"><i class="fa fa-times"></i></a>
                                 </div>
                             </td>
                         </tr>
