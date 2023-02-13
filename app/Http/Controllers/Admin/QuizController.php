@@ -11,7 +11,17 @@ use App\Http\Requests\QuizUpdateRequest;
 class QuizController extends Controller
 {
     public function index(){
-        $quizzes = Quiz::paginate(10);
+        $quizzes = Quiz::withCount('questions');
+
+        if(request()->get('q')){
+            $quizzes = $quizzes->where('title','like','%'.request()->get('q').'%');
+        }
+        if(request()->get('status')){
+            $quizzes = $quizzes->where('status',request()->get('status'));
+        }
+        $quizzes = $quizzes->paginate(5);
+
+
         return view('admin.quiz.index', compact('quizzes'));
     }
 
@@ -21,7 +31,7 @@ class QuizController extends Controller
 
     public function store(QuizCreateRequest $request){
         Quiz::create($request->post());
-        
+
         return redirect()->route('quizzes.index')->withSuccess('Quiz başarıyla oluşturuldu.');
     }
 
@@ -30,8 +40,7 @@ class QuizController extends Controller
     }
 
     public function edit($id){
-        $quiz = Quiz::find($id) ?? abort(404,'Quiz bulunamadı');
-        //do($quiz);
+        $quiz = Quiz::withCount('questions')->find($id) ?? abort(404,'Quiz bulunamadı');
         return view('admin.quiz.edit', compact('quiz'));
     }
 
@@ -39,7 +48,7 @@ class QuizController extends Controller
         Quiz::find($id) ?? abort(404,'Quiz bulunamadı');
 
         Quiz::where('id',$id)->update($request->except('_method','_token'));
-        
+
         return redirect()->route('quizzes.index')->withSuccess('Quiz başarıyla güncellendi.');
     }
 

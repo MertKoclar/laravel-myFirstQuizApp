@@ -35,11 +35,14 @@
                 @enderror
             </div>
             <div class="row mb-3">
+                <span class="text-sm mb-2">@if($quiz->questions_count < 4) (Bu quizin soru sayısı 4'den az olduğu için aktif yapılamamaktadır.) @endif</span>
                 <label for="durum" class="form-label col-sm-2 col-form-label">Durum</label>
                 <div class="col-sm-3">
                     <select class="form-select @error('status') is-invalid @enderror" name="status" id="durum">
                         <option value="draft"   @if($quiz->status == 'draft')   selected @endif>Taslak</option>
+                        @if($quiz->questions_count >= 4)
                         <option value="publish" @if($quiz->status == 'publish') selected @endif>Aktif</option>
+                        @endif
                         <option value="passive" @if($quiz->status == 'passive') selected @endif>Pasif</option>
                     </select>
                 </div>

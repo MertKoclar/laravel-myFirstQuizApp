@@ -13,15 +13,15 @@
 <div class="container-fluid pt-4 px-4">
     <div class="bg-secondary text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0"><a href="{{route('quizzes.edit',$quiz->id)}}"><i class="fa fa-arrow-left"></i> {{$quiz->title}}</a> Quizine ait questionlar</h6>
+            <h6 class="mb-0"><a href="{{route('quizzes.index')}}"><i class="fa fa-arrow-left"></i> {{$quiz->title}}</a> Quizine ait questionlar</h6>
             <a href="{{route('questions.create',$quiz->id)}}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Question oluştur</a>
         </div>
         <div class="table-responsive">
             <table class="table text-start align-middle table-bordered table-hover mb-0">
                 <thead>
                     <tr class="text-white">
-                        <th scope="col">Quiz id</th>
                         <th scope="col">Question başlığı</th>
+                        <th scope="col">Fotoğraf yolu</th>
                         <th scope="col">Cevabı</th>
                         <th scope="col">İşlemler</th>
                     </tr>
@@ -29,16 +29,16 @@
                 <tbody>
                     @foreach ($quiz->questions as $question)
                         <tr>
-                            <td>{{$question->quiz_id}}</td>
                             <td>{{$question->question}}</td>
+                            <td class="text-align-center">@if($question->image)<span title="{{$question->image}}"><a href="/{{$question->image}}" target="_blank" class="btn btn-sm btn-light">Görüntüle</span>@else - @endif</td>
                             @php
                                 $cevap = $question->correct_answer;
                             @endphp
                             <td>{{$question->$cevap}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-sm btn-outline-warning" href="questions/{{$question->id}}/edit"><i class="fa fa-pen"></i></a>
-                                    <a class="btn btn-sm btn-outline-danger " href="{{route('questions.sil', $quiz->id)}}"><i class="fa fa-times"></i></a>
+                                    <a class="btn btn-sm btn-outline-warning" href="{{route('questions.edit', [$quiz->id,$question->id])}}"><i class="fa fa-pen"></i></a>
+                                    <a class="btn btn-sm btn-outline-danger " href="{{route('questions.destroy', [$quiz->id,$question->id])}}"><i class="fa fa-times"></i></a>
                                 </div>
                             </td>
                         </tr>

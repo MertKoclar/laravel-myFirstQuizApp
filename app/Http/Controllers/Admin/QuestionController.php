@@ -43,23 +43,31 @@ class QuestionController extends Controller
     }
 
     public function edit($quiz_id,$id){
-        $question = Question::find($id) ?? abort(404,'Question bulunamadı');
+        $question = Quiz::find($quiz_id)->questions()->where('id',$id)->first() ?? abort(404,'Question bulunamadı');
         
         return view('admin.question.edit', compact('question'));
     }
 
-    public function update(QuestionUpdateRequest $request, $id){
-        Question::find($id) ?? abort(404,'Question bulunamadı');
+    public function update(QuestionCreateRequest $request, $quiz_id, $id){
+        if($request->hasFile('image')){
+            $fileName = Str::slug($request->question).'.'.$request->image->getClientOriginalextension();
+            $fileNameWithUpload = 'uploads/'.$fileName;
 
-        Question::where('id',$id)->update($request->except('_method','_token'));
+            $request->image->move(public_path('uploads'),$fileName);
+            $request->merge([
+                'image' => $fileNameWithUpload,
+            ]);
+
+        }
+        Quiz::find($quiz_id)->questions()->whereId($id)->first()->update($request->post());
         
-        return redirect()->route('questions.index')->withSuccess('Question başarıyla güncellendi.');
+        return redirect()->route('questions.index',$quiz_id)->withSuccess('Question başarıyla güncellendi.');
     }
 
-    public function destroy($id){
-        Question::find($id) ?? abort(404,'Question bulunamadı');
-        Question::find($id)->delete();
+    public function destroy($quiz_id,$id){
+        Quiz::find($quiz_id)->questions()->where('id',$id) ?? abort(404,'Question bulunamadı');
+        Quiz::find($quiz_id)->questions()->where('id',$id)->delete();
 
-        return redirect()->route('quizzes.index')->withSuccess('Question başarıyla silindi.');
+        return redirect()->route('questions.index',$quiz_id)->withSuccess('Question başarıyla silindi.');
     }
 }

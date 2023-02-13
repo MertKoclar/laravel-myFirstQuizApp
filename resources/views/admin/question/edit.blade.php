@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 @section('title')Admin - Question düzenle @endsection
 @section('content')
-{{-- <div class="container-fluid pt-4 px-4">
+<div class="container-fluid pt-4 px-4">
     @if($errors->any())
         <div class="alert alert-danger">
             @foreach($errors->all() as $error)
@@ -9,11 +9,11 @@
             @endforeach
         </div>
     @endif
-</div> --}}
+</div>
 <div class="container-fluid pt-4 px-4">
     <div class="bg-secondary rounded h-100 p-4">
-        <h6 class="mb-4">Quiz oluştur</h6>
-        <form method="POST" action="questions/{{$question->id}}">
+        <h6 class="mb-4">Quiz düzenle</h6>
+        <form method="POST" action="{{route('questions.update',[$question->quiz_id,$question->id])}}" enctype="multipart/form-data">
             @method('PUT')
             @csrf
             <div class="mb-3">
@@ -25,6 +25,16 @@
                     </div>
                 @enderror
             </div>
+            
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Question fotoğrafı</label>
+                @if($question->image)
+                <br>
+                <a href="{{asset($question->image)}}" target="_blank"><img src="{{asset($question->image)}}" alt="Geçerli fotoğraf" width="200"></a><br><br>
+                @endif
+                <input class="form-control bg-dark" type="file" id="formFile" name="image">
+            </div>
+
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="answer1" class="form-label">Cevap 1</label>
